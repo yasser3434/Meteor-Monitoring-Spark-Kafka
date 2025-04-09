@@ -22,23 +22,11 @@ def load_parquet_data():
 
 @app.route("/")
 def home():
-    # return jsonify({
-    #     "message": "Welcome to Meteor Alerts API",
-    #     "endpoints": {
-    #         "objects": "/objects - Get recent meteor objects",
-    #         "alerts": "/alerts - Get dangerous meteor alerts"
-    #     }
-    # })
     return render_template("home.html")
 
 
 @app.route("/objects", methods=["GET"])
 def get_objects():
-    # df = load_parquet_data()
-    # last_20_rows = df.tail(20)  
-    # data = [row.asDict() for row in last_20_rows]
-    # return jsonify(data)
-
     df = load_parquet_data()
     last_20_rows = df.orderBy(F.desc("timestamp")).limit(20).toPandas()
     return render_template(
@@ -50,13 +38,6 @@ def get_objects():
 
 @app.route("/alerts", methods=["GET"])
 def get_alerts():
-    # df = load_parquet_data()
-    # filtered_df = df.filter((F.col("vitesse") > 25) & (F.col("taille") > 10))
-    # last_20_rows = filtered_df.tail(20) 
-    # dangerous = [{"id": row["id"], "vitesse": row["vitesse"], "taille": row["taille"], "type": row["type"]} for row in last_20_rows]
-
-    # return jsonify(dangerous)
-
     df = load_parquet_data()
     dangerous_df = df.filter(
         (F.col("vitesse") > 25) & (F.col("taille") > 10)

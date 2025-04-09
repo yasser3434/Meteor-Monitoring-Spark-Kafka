@@ -39,14 +39,7 @@ json_df = df.selectExpr("CAST(value AS STRING)") \
     .select(F.from_json(F.col("value"), schema).alias("data")) \
     .select("data.*")
 
-# dangerous_df = json_df.filter((F.col("vitesse") > 25) & (F.col("taille") > 10))
-
 checkpoint_location = "hdfs://namenode:9000/checkpoints/meteors"
-
-# query = dangerous_df.writeStream \
-#     .outputMode("append") \
-#     .format("console") \
-#     .start()
 
 query = json_df.writeStream \
     .format("parquet") \
