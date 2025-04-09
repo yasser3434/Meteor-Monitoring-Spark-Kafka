@@ -1,8 +1,6 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
-import pandas as pd
-import pyarrow.parquet as pq
 
 app = Flask(__name__)
 

@@ -6,10 +6,6 @@ import time
 print('WAITING FOR OTHER SERVICES TO START...')
 time.sleep(5)
 
-# spark = SparkSession.builder \
-#     .appName("tp_meteors") \
-#     .master("spark://spark-master:7077") \
-#     .getOrCreate()
 
 spark = SparkSession.builder \
     .appName("tp_meteors") \
