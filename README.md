@@ -15,7 +15,7 @@ To install the required Python dependencies
 
 ## HDFS
 Create the directory and change the permissions
-hdfs dfs -chmod 777 /user/spark/data
+``` hdfs dfs -chmod 777 /user/spark/data ```
 
 ## RUN
 ``` docker compose un --build ```
