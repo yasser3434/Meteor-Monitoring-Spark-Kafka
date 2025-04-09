@@ -6,12 +6,9 @@ Meteor Watch is a web application built with Flask and Apache Spark. It provides
 
 - **Docker**: To build and run the application in containers.
 - **Kafka**: For streaming meteor data. Ensure that Kafka is up and running.
-- **HDFS**: To store the meteor data in Hadoop Distributed File System.
-- **Spark**: To process the meteor data using Spark streaming.
+- **HDFS**: To store the meteor data in HDFS
+- **Spark**: To process the meteor data using Spark streaming/ pyspark.
 
-## Install Dependencies
-
-To install the required Python dependencies
 
 ## HDFS
 Create the directory and change the permissions
@@ -19,5 +16,5 @@ Create the directory and change the permissions
 
 ## RUN
 ``` docker compose un --build ```
-Re run the producer is you're getting error
+Re run the producer if you're getting errors
 ``` docker compose up --build producer ```
