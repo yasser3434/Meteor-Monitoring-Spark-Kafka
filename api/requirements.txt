@@ -1,0 +1,7 @@
+Cmake
+flask
+pyarrow
+pandas
+pyspark
+hdfs
+setuptools

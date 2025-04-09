@@ -1,0 +1,118 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+
+  spark-master:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+
+
+  spark-worker:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+    # ports:
+    #   - "8081:8081"
+    deploy:
+      replicas: 3
+
+
+  producer:
+    build: ./producer
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKER=kafka:9092
+    volumes:
+      - ./producer:/app
+
+
+  spark-streaming:
+    build: ./spark
+    depends_on:
+      - kafka
+      - spark-master
+    volumes:
+      - ./spark:/app
+
+
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    restart: always
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9870"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    restart: always
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    depends_on:
+      - namenode
+
+
+  batch-analysis:
+    build: ./batch
+    depends_on:
+      - spark-master
+      - namenode
+    volumes:
+      - ./batch:/app
+
+  flask-api:
+    build: ./api
+    ports:
+      - "5000:5000"
+    environment:
+      - HDFS_NAMENODE=hdfs://namenode:9000
+    depends_on:
+      - spark-master
+      - namenode
+
+
+volumes:
+  hadoop_namenode:
+  hadoop_datanode:

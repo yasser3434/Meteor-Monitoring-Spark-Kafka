@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">Welcome to Meteor Monitor</h1>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Meteors</h5>
+                    <p class="card-text">View the most recent meteor observations</p>
+                    <a href="{{ url_for('get_objects') }}" class="btn btn-primary">View Objects</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Danger Alerts</h5>
+                    <p class="card-text">View potentially dangerous meteors</p>
+                    <a href="{{ url_for('get_alerts') }}" class="btn btn-danger">View Alerts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

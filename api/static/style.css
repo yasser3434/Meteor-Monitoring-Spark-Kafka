@@ -1,0 +1,19 @@
+.danger-row {
+    background-color: #ffcccc;
+}
+
+.table-container {
+    margin: 20px;
+}
+
+.navbar {
+    margin-bottom: 30px;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
